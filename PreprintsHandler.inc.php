@@ -50,24 +50,23 @@ class PreprintsHandler extends Handler {
 	function view($args, $request) {
 
 		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_USER);
-		
+				
 		$context = $request->getContext();
 		$contextId = $context->getId();
 		
 		$templateMgr = TemplateManager::getManager($request);
 		$this->setupTemplate($request);
 
-		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
-		$preprints = $publishedArticleDao->getBySetting('preprint', 'on', $contextId);		
-		
+		$articleDao = DAORegistry::getDAO('PublishedArticleDAO');
+		$preprints = $articleDao->getBySetting('preprint', 'on', $contextId);		
+				
 		$templateMgr->assign('preprints', $preprints);
-		$templateMgr->assign('galley_link', self::$plugin->getTemplatePath() . "galley_link.tpl");
 
 		$templateMgr->display(self::$plugin->getTemplatePath() . 'content.tpl');
 	}
 	
 	/**
-	 * View Article. (Either article landing page or galley view.)
+	 * View Article.
 	 * @param $args array
 	 * @param $request Request
 	 */
@@ -80,6 +79,9 @@ class PreprintsHandler extends Handler {
 		
 		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
 		$article = $publishedArticleDao->getPublishedArticleByBestArticleId((int) $journal->getId(), $articleId, true);
+		
+		// Make sure that preprint access is available
+		if (!$article->getData('preprint')) fatalError('Cannot view article.');		
 
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign(array(
@@ -87,36 +89,20 @@ class PreprintsHandler extends Handler {
 			'fileId' => $fileId,
 		));
 		$this->setupTemplate($request);
-				
 		
-		if (!$article->getData('preprint')) fatalError('Cannot view galley.');
-
-		// Fetch and assign the galley to the template
 		$galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');
 		$galley = $galleyDao->getByBestGalleyId($galleyId, $article->getId());
+		
 		if ($galley && $galley->getRemoteURL()) $request->redirectUrl($galley->getRemoteURL());
 
-		// Copyright and license info
-		$templateMgr->assign(array(
-			'copyright' => $journal->getLocalizedSetting('copyrightNotice'),
-			'copyrightHolder' => $journal->getLocalizedSetting('copyrightHolder'),
-			'copyrightYear' => $journal->getSetting('copyrightYear')
-		));
-		if ($article->getLicenseURL()) $templateMgr->assign(array(
-			'licenseUrl' => $article->getLicenseURL(),
-			'ccLicenseBadge' => Application::getCCLicenseBadge($article->getLicenseURL()),
-		));
-
-
-		if (!$galley) {
-			$templateMgr->assign('galley_link', self::$plugin->getTemplatePath() . "galley_link.tpl");
-			return $templateMgr->display(self::$plugin->getTemplatePath() . 'article.tpl');
-		} else {
-			// Galley: Prepare the galley file download. Problem with PDF.js galley is that the back link is hardcoded
-			if (!HookRegistry::call('ArticleHandler::view::galley', array(&$request, &$issue, &$galley, &$article))) {
-				$request->redirect(null, null, 'download', array($articleId, $galleyId));
-			}			
+		if ($galley) {
 			
+			// TODO: use galley viewer plugins here
+			$request->redirect(null, null, 'download', array($articleId, $galleyId));
+			
+		} 
+		else {
+			$request->redirect(null, null, 'view', $request->getRequestedOp());
 		}
 	}
 
@@ -135,6 +121,7 @@ class PreprintsHandler extends Handler {
 		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
 		$article = $publishedArticleDao->getPublishedArticleByBestArticleId((int) $journal->getId(), $articleId, true);
 		
+		// Make sure that preprint access is available		
 		if (!$article->getData('preprint')) fatalError('Cannot view galley.');
 		
 		$galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');		
@@ -158,6 +145,7 @@ class PreprintsHandler extends Handler {
 			$submissionFileManager = new SubmissionFileManager($article->getContextId(), $article->getId());
 			$submissionFileManager->downloadFile($fileId, null, $request->getUserVar('inline')?true:false);
 		}
+		
 		
 	}	
 	
