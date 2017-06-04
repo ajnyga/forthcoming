@@ -44,12 +44,12 @@ class PreprintsPlugin extends GenericPlugin {
 
 				// Intercept the LoadHandler hook to present preprints toc when requested.
 				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
-				
+												
 				// Handle metadata forms
 				HookRegistry::register('TemplateManager::display', array($this, 'metadataFieldEdit'));
 				HookRegistry::register('issueentrypublicationmetadataform::readuservars', array($this, 'metadataReadUserVars'));
 				HookRegistry::register('issueentrypublicationmetadataform::execute', array($this, 'metadataExecute'));
-				HookRegistry::register('articledao::getAdditionalFieldNames', array($this, 'articleSubmitGetFieldNames'));				
+				HookRegistry::register('articledao::getAdditionalFieldNames', array($this, 'articleSubmitGetFieldNames'));
 				
 
 			}
@@ -72,6 +72,8 @@ class PreprintsPlugin extends GenericPlugin {
 		return false;
 		
 	}
+		
+	
 	
 	/**
 	 * Concern preprint field in the form
@@ -95,7 +97,6 @@ class PreprintsPlugin extends GenericPlugin {
 	
 
 	/**
-	 * Declare the handler function to process the actual page PATH
 	 * @param $hookName string The name of the invoked hook
 	 * @param $args array Hook parameters
 	 * @return boolean Hook handling status
@@ -112,8 +113,9 @@ class PreprintsPlugin extends GenericPlugin {
 			return true;
 		}
 		
-		return false;	
+		return false;
 	}
+	
 	
 	/**
 	 * Add preprint element to the article
@@ -151,8 +153,7 @@ class PreprintsPlugin extends GenericPlugin {
 		}
 		$templateMgr->unregister_outputfilter('formFilter');
 		return $output;
-	}		
-	
+	}			
 
 	/**
 	 * @copydoc PKPPlugin::getTemplatePath

@@ -17,6 +17,7 @@
 	<div class="obj_issue_toc">
 	<ul class="articles">
 		{foreach from=$preprints item=article}
+			{if $article->getStatus() == 1}
 			<li>
 				
 			{assign var=articlePath value=$article->getBestArticleId()}
@@ -102,6 +103,7 @@
 			</div>
 				
 			</li>
+			{/if}
 		{/foreach}
 	</ul>
 	</div>

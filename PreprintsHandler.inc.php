@@ -124,6 +124,7 @@ class PreprintsHandler extends Handler {
 		// Make sure that preprint access is available		
 		if (!$article->getData('preprint')) fatalError('Cannot view galley.');
 		
+		
 		$galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');		
 		$galley = $galleyDao->getByBestGalleyId($galleyId, $article->getId());
 		
