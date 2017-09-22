@@ -11,10 +11,10 @@
   * Plugin version information.
   -->
 <version>
-	<application>preprints</application>
+	<application>forthcoming</application>
 	<type>plugins.generic</type>
-	<release>1.0.0.0</release>
-	<date>2017-05-08</date>
+	<release>1.0.0.2</release>
+	<date>2017-09-22</date>
 	<lazy-load>1</lazy-load>
-	<class>PreprintsPlugin</class>
+	<class>ForthcomingPlugin</class>
 </version>

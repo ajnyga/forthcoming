@@ -1,15 +1,15 @@
 {**
- * plugins/generic/preprints/templates/edit.tpl
+ * plugins/generic/forthcoming/templates/edit.tpl
  *
  * Copyright (c) 2014-2017 Simon Fraser University
  * Copyright (c) 2003-2017 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * Edit preprint 
+ * Edit forthcoming 
  *
  *}
-{fbvFormArea id="preprint"}
+{fbvFormArea id="forthcoming"}
 	{fbvFormSection list="true"}
-		{fbvElement type="checkbox" id="preprint" label="plugins.generic.preprints.fieldDescription" checked=$preprint|compare:true}
+		{fbvElement type="checkbox" id="forthcoming" label="plugins.generic.forthcoming.fieldDescription" checked=$forthcoming|compare:true}
 	{/fbvFormSection}
 {/fbvFormArea}

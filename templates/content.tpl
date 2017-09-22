@@ -5,10 +5,10 @@
  * Copyright (c) 2003-2017 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * Display Preprints
+ * Display Forthcoming articles
  *}
 
-{capture assign="pageTitle"}{translate key="plugins.generic.preprints.pageTitle"}{/capture}
+{capture assign="pageTitle"}{translate key="plugins.generic.forthcoming.pageTitle"}{/capture}
  
 {include file="frontend/components/header.tpl" pageTitleTranslated=$pageTitle}
 
@@ -16,7 +16,7 @@
 <div class="page page_issue">
 	<div class="obj_issue_toc">
 	<ul class="articles">
-		{foreach from=$preprints item=article}
+		{foreach from=$forthcoming item=article}
 			{if $article->getStatus() == 1}
 			<li>
 				

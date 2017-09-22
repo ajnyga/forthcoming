@@ -7,13 +7,13 @@
  * Copyright (c) 2003-2017 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * Wrapper for Preprints plugin.
+ * Wrapper for Forthcoming plugin.
  *
- * @package plugins.generic.preprints
+ * @package plugins.generic.forthcoming
  *
  */
 
-require_once('PreprintsPlugin.inc.php');
-return new PreprintsPlugin();
+require_once('ForthcomingPlugin.inc.php');
+return new ForthcomingPlugin();
 
 ?>

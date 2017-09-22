@@ -1,21 +1,21 @@
 <?php
 
 /**
- * @file PreprintsHandler.inc.php
+ * @file ForthcomingHandler.inc.php
  *
  * Copyright (c) 2014-2017 Simon Fraser University
  * Copyright (c) 2003-2017 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @package plugins.generic.preprints
- * @class PreprintsHandler
- * Find preprint content and display it when requested.
+ * @package plugins.generic.forthcoming
+ * @class ForthcomingHandler
+ * Find forthcoming content and display it when requested.
  */
 
 import('classes.handler.Handler');
 
-class PreprintsHandler extends Handler {
-	/** @var PreprintsPlugin The preprints plugin */
+class ForthcomingHandler extends Handler {
+	/** @var ForthcomingPlugin The forthcoming plugin */
 	static $plugin;	
 
 	/**
@@ -26,8 +26,8 @@ class PreprintsHandler extends Handler {
 	}
 
 	/**
-	 * Provide the preprints plugin to the handler.
-	 * @param $plugin PreprintsPlugin
+	 * Provide the forthcoming plugin to the handler.
+	 * @param $plugin ForthcomingPlugin
 	 */
 	static function setPlugin($plugin) {
 		self::$plugin = $plugin;
@@ -58,9 +58,9 @@ class PreprintsHandler extends Handler {
 		$this->setupTemplate($request);
 
 		$articleDao = DAORegistry::getDAO('PublishedArticleDAO');
-		$preprints = $articleDao->getBySetting('preprint', 'on', $contextId);		
+		$forthcoming = $articleDao->getBySetting('forthcoming', 'on', $contextId);		
 				
-		$templateMgr->assign('preprints', $preprints);
+		$templateMgr->assign('forthcoming', $forthcoming);
 
 		$templateMgr->display(self::$plugin->getTemplatePath() . 'content.tpl');
 	}
@@ -80,8 +80,8 @@ class PreprintsHandler extends Handler {
 		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
 		$article = $publishedArticleDao->getPublishedArticleByBestArticleId((int) $journal->getId(), $articleId, true);
 		
-		// Make sure that preprint access is available
-		if (!$article->getData('preprint')) fatalError('Cannot view article.');		
+		// Make sure that forthcoming access is available
+		if (!$article->getData('forthcoming')) fatalError('Cannot view article.');		
 
 		$templateMgr = TemplateManager::getManager($request);
 		$templateMgr->assign(array(
@@ -121,8 +121,8 @@ class PreprintsHandler extends Handler {
 		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
 		$article = $publishedArticleDao->getPublishedArticleByBestArticleId((int) $journal->getId(), $articleId, true);
 		
-		// Make sure that preprint access is available		
-		if (!$article->getData('preprint')) fatalError('Cannot view galley.');
+		// Make sure that forthcoming access is available		
+		if (!$article->getData('forthcoming')) fatalError('Cannot view galley.');
 		
 		
 		$galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');		

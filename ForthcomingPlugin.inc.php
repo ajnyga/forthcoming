@@ -1,26 +1,26 @@
 <?php
 
 /**
- * @file PreprintsPlugin.inc.php
+ * @file ForthcomingPlugin.inc.php
  *
  * Copyright (c) 2014-2017 Simon Fraser University
  * Copyright (c) 2003-2017 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @package plugins.generic.preprints
- * @class PreprintsPlugin
+ * @package plugins.generic.forthcoming
+ * @class ForthcomingPlugin
  * Static pages plugin main class
  */
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
-class PreprintsPlugin extends GenericPlugin {
+class ForthcomingPlugin extends GenericPlugin {
 	/**
 	 * Get the plugin's display (human-readable) name.
 	 * @return string
 	 */
 	function getDisplayName() {
-		return __('plugins.generic.preprints.displayName');
+		return __('plugins.generic.forthcoming.displayName');
 	}
 
 	/**
@@ -28,7 +28,7 @@ class PreprintsPlugin extends GenericPlugin {
 	 * @return string
 	 */
 	function getDescription() {
-		return __('plugins.generic.preprints.description');
+		return __('plugins.generic.forthcoming.description');
 	}
 
 
@@ -42,7 +42,7 @@ class PreprintsPlugin extends GenericPlugin {
 		if (parent::register($category, $path)) {
 			if ($this->getEnabled()) {
 
-				// Intercept the LoadHandler hook to present preprints toc when requested.
+				// Intercept the LoadHandler hook to present forthcoming toc when requested.
 				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
 												
 				// Handle metadata forms
@@ -76,22 +76,22 @@ class PreprintsPlugin extends GenericPlugin {
 	
 	
 	/**
-	 * Concern preprint field in the form
+	 * Concern forthcoming field in the form
 	 */
 	function metadataReadUserVars($hookName, $params) {
 		$userVars =& $params[1];
-		$userVars[] = 'preprint';
+		$userVars[] = 'forthcoming';
 		return false;
 	}	
 		
 	/**
-	 * Set preprint
+	 * Set forthcoming
 	 */
 	function metadataExecute($hookName, $params) {
 		$form =& $params[0];
 		$article = $form->getSubmission();
-		$preprint = $form->getData('preprint');
-		$article->setData('preprint', $preprint);
+		$forthcoming = $form->getData('forthcoming');
+		$article->setData('forthcoming', $forthcoming);
 		return false;
 	}	
 	
@@ -107,9 +107,9 @@ class PreprintsPlugin extends GenericPlugin {
 		$page =& $args[0];
 		
 		if ($page == "forthcoming"){
-			define('HANDLER_CLASS', 'PreprintsHandler');
-			$this->import('PreprintsHandler');
-			PreprintsHandler::setPlugin($this);
+			define('HANDLER_CLASS', 'ForthcomingHandler');
+			$this->import('ForthcomingHandler');
+			ForthcomingHandler::setPlugin($this);
 			return true;
 		}
 		
@@ -118,11 +118,11 @@ class PreprintsPlugin extends GenericPlugin {
 	
 	
 	/**
-	 * Add preprint element to the article
+	 * Add forthcoming element to the article
 	 */
 	function articleSubmitGetFieldNames($hookName, $params) {
 		$fields =& $params[1];
-		$fields[] = 'preprint';
+		$fields[] = 'forthcoming';
 		return false;
 	}
 	
@@ -132,17 +132,17 @@ class PreprintsPlugin extends GenericPlugin {
 	 */
 	function formFilter($output, &$templateMgr) {
 		
-		if (preg_match('/<div class=\"section formButtons/', $output, $matches, PREG_OFFSET_CAPTURE) AND !strpos($output, 'id="preprint"')) {
+		if (preg_match('/<div class=\"section formButtons/', $output, $matches, PREG_OFFSET_CAPTURE) AND !strpos($output, 'id="forthcoming"')) {
 			$match = $matches[0][0];
 			$offset = $matches[0][1];				
 			
 			$fbv = $templateMgr->getFBV();
 			$form = $fbv->getForm();
 			$article = $form->getSubmission();		
-			$preprint = $article->getData('preprint');
+			$forthcoming = $article->getData('forthcoming');
 						
 			$templateMgr->assign(array(
-				'preprint' => $preprint,
+				'forthcoming' => $forthcoming,
 			));
 			
 			$newOutput = substr($output, 0, $offset);	
