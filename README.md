@@ -14,7 +14,7 @@ Problems:
 - how to deal with OJS statistics?
 - for example pdf galley plugin has problems, because the return link is hard coded and points to the actual article page.
 
-
-
-
+#######################################################################################
+# Plugin created by The Federation of Finnish Learned Societies (https://tsv.fi/en/). #
+#######################################################################################
 
