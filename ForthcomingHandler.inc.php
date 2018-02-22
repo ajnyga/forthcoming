@@ -58,8 +58,9 @@ class ForthcomingHandler extends Handler {
 		$this->setupTemplate($request);
 
 		$articleDao = DAORegistry::getDAO('PublishedArticleDAO');
-		$forthcoming = $articleDao->getBySetting('forthcoming', 'on', $contextId);		
-				
+		$forthcomingIterator = $articleDao->getBySetting('forthcoming', 'on', $contextId);		
+		$forthcoming = $forthcomingIterator->toArray();
+
 		$templateMgr->assign('forthcoming', $forthcoming);
 
 		$templateMgr->display(self::$plugin->getTemplatePath() . 'content.tpl');

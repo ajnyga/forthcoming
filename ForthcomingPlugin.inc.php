@@ -46,7 +46,7 @@ class ForthcomingPlugin extends GenericPlugin {
 				HookRegistry::register('LoadHandler', array($this, 'callbackHandleContent'));
 												
 				// Handle metadata forms
-				HookRegistry::register('TemplateManager::display', array($this, 'metadataFieldEdit'));
+				HookRegistry::register('TemplateManager::fetch', array($this, 'metadataFieldEdit'));
 				HookRegistry::register('issueentrypublicationmetadataform::readuservars', array($this, 'metadataReadUserVars'));
 				HookRegistry::register('issueentrypublicationmetadataform::execute', array($this, 'metadataExecute'));
 				HookRegistry::register('articledao::getAdditionalFieldNames', array($this, 'articleSubmitGetFieldNames'));
