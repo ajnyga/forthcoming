@@ -1,11 +1,10 @@
 <?php
-
 /**
  * @file ForthcomingHandler.inc.php
  *
- * Copyright (c) 2014-2017 Simon Fraser University
- * Copyright (c) 2003-2017 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ * Copyright (c) 2014-2019 Simon Fraser University
+ * Copyright (c) 2003-2019 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @package plugins.generic.forthcoming
  * @class ForthcomingHandler
@@ -48,24 +47,18 @@ class ForthcomingHandler extends Handler {
 	 * @param $request PKPRequest Request object.
 	 */
 	function view($args, $request) {
-
 		AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_USER);
-				
 		$context = $request->getContext();
 		$contextId = $context->getId();
-		
 		$templateMgr = TemplateManager::getManager($request);
 		$this->setupTemplate($request);
-
 		$articleDao = DAORegistry::getDAO('PublishedArticleDAO');
-		$forthcomingIterator = $articleDao->getBySetting('forthcoming', 'on', $contextId);		
+		$forthcomingIterator = $articleDao->getBySetting('forthcoming', 'on', $contextId);
 		$forthcoming = $forthcomingIterator->toArray();
-
 		$templateMgr->assign('forthcoming', $forthcoming);
-
-		$templateMgr->display(self::$plugin->getTemplatePath() . 'content.tpl');
+		$templateMgr->display(self::$plugin->getTemplateResource('content.tpl'));
 	}
-	
+
 	/**
 	 * View Article.
 	 * @param $args array
@@ -75,9 +68,7 @@ class ForthcomingHandler extends Handler {
 		$articleId = array_shift($args);
 		$galleyId = array_shift($args);
 		$fileId = array_shift($args);
-
 		$journal = $request->getJournal();
-		
 		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
 		$article = $publishedArticleDao->getPublishedArticleByBestArticleId((int) $journal->getId(), $articleId, true);
 		
@@ -93,14 +84,10 @@ class ForthcomingHandler extends Handler {
 		
 		$galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');
 		$galley = $galleyDao->getByBestGalleyId($galleyId, $article->getId());
-		
 		if ($galley && $galley->getRemoteURL()) $request->redirectUrl($galley->getRemoteURL());
-
 		if ($galley) {
-			
 			// TODO: use galley viewer plugins here
 			$request->redirect(null, null, 'download', array($articleId, $galleyId));
-			
 		} 
 		else {
 			$request->redirect(null, null, 'view', $request->getRequestedOp());
@@ -116,16 +103,13 @@ class ForthcomingHandler extends Handler {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$galleyId = isset($args[1]) ? $args[1] : 0;
 		$fileId = isset($args[2]) ? (int) $args[2] : 0;
-		
 		$journal = $request->getJournal();
-		
 		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
 		$article = $publishedArticleDao->getPublishedArticleByBestArticleId((int) $journal->getId(), $articleId, true);
-		
+
 		// Make sure that forthcoming access is available		
 		if (!$article->getData('forthcoming')) fatalError('Cannot view galley.');
-		
-		
+
 		$galleyDao = DAORegistry::getDAO('ArticleGalleyDAO');		
 		$galley = $galleyDao->getByBestGalleyId($galleyId, $article->getId());
 		
@@ -145,14 +129,9 @@ class ForthcomingHandler extends Handler {
 		if (!HookRegistry::call('ArticleHandler::download', array($article, &$galley, &$fileId))) {
 			import('lib.pkp.classes.file.SubmissionFileManager');
 			$submissionFileManager = new SubmissionFileManager($article->getContextId(), $article->getId());
-			$submissionFileManager->downloadFile($fileId, null, $request->getUserVar('inline')?true:false);
-		}
-		
-		
-	}	
-	
-	
-	
+			$submissionFileManager->downloadById($fileId, null, $request->getUserVar('inline')?true:false);
+		}	
+	}
 }
 
 ?>

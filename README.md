@@ -1,5 +1,5 @@
 
-# Forthcoming articles plugin for OJS 3.1.0.1 
+# Forthcoming articles plugin for OJS 3.1.2+ 
 
 *NOTE: WORK IN PROGRESS*
 
