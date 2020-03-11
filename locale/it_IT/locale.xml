@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * locale/it_IT/locale.xml
+  *
+  * Copyright (c) 2014-2018 Simon Fraser University
+  * Copyright (c) 2003-2018 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  *
+  * Localization strings
+  -->
+ 
+<locale name="it_IT" full_name="Italiano">
+	<message key="plugins.generic.forthcoming.displayName">Plugin Forthcoming articles</message>
+	<message key="plugins.generic.forthcoming.description">Questo plugin permette di mostrare gli articoli già pronti prima che il fascicolo intero sia pubblicato.</message>	
+	<message key="plugins.generic.forthcoming.pageTitle">In uscita</message>
+	<message key="plugins.generic.forthcoming.fieldDescription">Mostra come in uscita</message>
+		
+</locale>
