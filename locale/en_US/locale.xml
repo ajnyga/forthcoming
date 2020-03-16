@@ -13,7 +13,7 @@
  
 <locale name="en_US" full_name="U.S. English">
 	<message key="plugins.generic.forthcoming.displayName">Forthcoming articles Plugin</message>
-	<message key="plugins.generic.forthcoming.description">This plugin adds support for dislplaying forthcoming articles before the whole issue is published.</message>	
+	<message key="plugins.generic.forthcoming.description">This plugin adds support for displaying forthcoming articles before the whole issue is published.</message>	
 	<message key="plugins.generic.forthcoming.pageTitle">Forthcoming</message>
 	<message key="plugins.generic.forthcoming.fieldDescription">Show as forthcoming</message>
 		
