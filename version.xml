@@ -4,8 +4,8 @@
 <!--
   * version.xml
   *
-  * Copyright (c) 2014-2019 Simon Fraser University
-  * Copyright (c) 2003-2019 John Willinsky
+  * Copyright (c) 2014-2021 Simon Fraser University
+  * Copyright (c) 2003-2021 John Willinsky
   * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
   *
   * Plugin version information.
@@ -13,8 +13,8 @@
 <version>
 	<application>forthcoming</application>
 	<type>plugins.generic</type>
-	<release>1.0.0.4</release>
-	<date>2019-07-04</date>
+	<release>2.0.0.0</release>
+	<date>2021-05-11</date>
 	<lazy-load>1</lazy-load>
 	<class>ForthcomingPlugin</class>
 </version>

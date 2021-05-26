@@ -1,0 +1,22 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-05-11T13:54:42+02:00\n"
+"PO-Revision-Date: 2021-05-11T13:54:42+02:00\n"
+"Language: \n"
+
+msgid "plugins.generic.forthcoming.displayName"
+msgstr "Módulo Próximos artículos"
+
+#, fuzzy
+msgid "plugins.generic.forthcoming.description"
+msgstr "Este módulo ofrece asistencia para mostrar los próximos artículos antes de que se publique todo el número."
+
+msgid "plugins.generic.forthcoming.pageTitle"
+msgstr "Próximo(s)"
