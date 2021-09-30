@@ -1,0 +1,29 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-09-30T16:00:00-05:00\n"
+"PO-Revision-Date: 2021-09-30T16:00:00-05:00\n"
+"Language: \n"
+
+msgid "plugins.generic.forthcoming.displayName"
+msgstr "Plugin Próximos artigos"
+
+#, fuzzy
+msgid "plugins.generic.forthcoming.description"
+msgstr "Este plugin possibilita exibir os próximos artigos antes que a edição esteja totalmente publicada."
+
+msgid "plugins.generic.forthcoming.pageTitle"
+msgstr "Próximo(s)"
+
+msgid "plugins.generic.forthcoming.settings.description"
+msgstr "Seleciona o próximo número"
+
+msgid "plugins.generic.forthcoming.label"
+msgstr "Próximo(s)"
