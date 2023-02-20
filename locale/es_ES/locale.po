@@ -20,3 +20,9 @@ msgstr "Este módulo ofrece asistencia para mostrar los próximos artículos ant
 
 msgid "plugins.generic.forthcoming.pageTitle"
 msgstr "Próximo(s)"
+
+msgid "plugins.generic.forthcoming.settings.description"
+msgstr "Seleccione el próximo número"
+
+msgid "plugins.generic.forthcoming.label"
+msgstr "Próximo(s)"
