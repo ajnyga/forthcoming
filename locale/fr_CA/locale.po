@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Marie-Hélène Vézina, Bibliothèques, Université de Montréal <marie-helene.vezina@umontreal.ca>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-06-01T10:52:12+00:00\n"
+"PO-Revision-Date: 2022-06-01T10:52:12+00:00\n"
+"Language: fr_CA\n"
+
+msgid "plugins.generic.forthcoming.displayName"
+msgstr "Plugiciel d'articles à paraître"
+
+msgid "plugins.generic.forthcoming.description"
+msgstr "Ce plugiciel prend en charge la publication des articles à paraître dans OJS."
+
+msgid "plugins.generic.forthcoming.pageTitle"
+msgstr "À paraître"
+
+msgid "plugins.generic.forthcoming.settings.description"
+msgstr "Sélectionner le numéro à paraître"
+
+msgid "plugins.generic.forthcoming.label"
+msgstr "À paraître"
