@@ -43,13 +43,15 @@ class ForthcomingHandler extends Handler {
 	 */
 	function index($args, $request) {
 			AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_USER);
+			import('classes.submission.Submission');
 			$context = $request->getContext();
 			$contextId = $context->getId();
 			$templateMgr = TemplateManager::getManager($request);
 			$this->setupTemplate($request);
 
 			if (self::$forthcomingIssueId) {
-				$forthcomingIterator = iterator_to_array(Services::get('submission')->getMany([
+				$forthcomingIterator = iterator_to_array(
+					Services::get('submission')->getMany([
 						'contextId' => $contextId,
 						'issueIds' => [self::$forthcomingIssueId],
 						'status' => [STATUS_PUBLISHED],
@@ -59,7 +61,7 @@ class ForthcomingHandler extends Handler {
 
 				$forthcomingSubmissions = [];
 				foreach ($forthcomingIterator as $submission) {
-					if ($submission->getCurrentPublication()->getData('issueId') == self::$forthcomingIssueId){
+					if ($submission->getCurrentPublication()->getData('issueId') == self::$forthcomingIssueId && $submission->getCurrentPublication()->getData('datePublished')){
 						$forthcomingSubmissions[] = $submission;
 					}
 				}

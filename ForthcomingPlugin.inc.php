@@ -45,15 +45,10 @@ class ForthcomingPlugin extends GenericPlugin {
 				HookRegistry::register('LoadHandler', array($this, 'loadForthcomingHandler'));
 
 				# Add Forthcoming label to article summary, hide Forthcoming issue from public issue archive and mark in backend archive, redirect calls to issue landing page to custom Forthcoming handler
-				HookRegistry::register('TemplateManager::display', array($this, 'issueDisplay'));
+				HookRegistry::register('TemplateManager::display', array($this, 'displayTemplate'));
 
 				# Add Forthcoming label to article summary
-				HookRegistry::register('Templates::Issue::Issue::Article', array($this, 'articleDisplay'));
-
-				# Add Forthcoming label to article landing page
-
-
-				#
+				#HookRegistry::register('Templates::Issue::Issue::Article', array($this, 'articleDisplay'));
 
 			}
 			return true;
@@ -65,29 +60,10 @@ class ForthcomingPlugin extends GenericPlugin {
 	/**
 	 * Handle Forthcoming issue in archive listings
 	 */
-	public function articleDisplay($hookName, $params) {
-		$request = Application::get()->getRequest();
-		$contextId = $request->getContext()->getId();
-		$forthcomingIssueId = $this->getSetting($contextId, 'forthcomingIssueId');
-		if ($forthcomingIssueId) {
-			$templateMgr = $params[1];
-			$publication = $templateMgr->getTemplateVars('publication');
-			if ($publication && $publication->getData('issueId') == $forthcomingIssueId) {
-				#$output =& $params[2];
-				#$output .= '<div class="forthcomingLabel"><span style="border-radius: 5px; background: #ebebeb; color: #262626; padding: 6px;">'.__('plugins.generic.forthcoming.label').'</span></div>';
-			}
-		}
-		return false;
-	}
-
-
-	/**
-	 * Handle Forthcoming issue in archive listings
-	 */
-	function issueDisplay($hookName, $params) {
+	function displayTemplate($hookName, $params) {
 		$template = $params[1];
 
-		// Redirect issue toc page
+		// Redirect default issue toc page to Forthcoming page
 		if ($template == "frontend/pages/issue.tpl"){
 			$contextId = Application::get()->getRequest()->getContext()->getId();
 			$forthcomingIssueId = $this->getSetting($contextId, 'forthcomingIssueId');
@@ -118,7 +94,7 @@ class ForthcomingPlugin extends GenericPlugin {
 			}
 		}
 
-		// Public archive
+		// Remove Forthcoming issue from the list of issues
 		if ($template == "frontend/pages/issueArchive.tpl"){
 			$contextId = Application::get()->getRequest()->getContext()->getId();
 			$forthcomingIssueId = $this->getSetting($contextId, 'forthcomingIssueId');
@@ -143,7 +119,7 @@ class ForthcomingPlugin extends GenericPlugin {
 			}
 		}
 
-		// Backend archive
+		// Backend archive display
 		if ($template == "manageIssues/issues.tpl"){
 			$templateMgr = $params[0];
 			$contextId = Application::get()->getRequest()->getContext()->getId();
@@ -187,9 +163,6 @@ class ForthcomingPlugin extends GenericPlugin {
 			}
 			$router = $request->getRouter();
 			$request->redirectUrl($router->url($request, null, 'index'));
-			# Get latest publication -> if not Forthcoming issue, do not show
-			# When published in new issue,
-			# Or delete the whole publication?
 
 		}
 		return false;
