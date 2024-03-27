@@ -47,7 +47,6 @@ class Handler extends \APP\handler\Handler {
 	 * @param $request PKPRequest Request object.
 	 */
 	function index($args, $request) {
-			AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_USER);
 			$context = $request->getContext();
 			$contextId = $context->getId();
 			$templateMgr = TemplateManager::getManager($request);

@@ -22,6 +22,7 @@ use PKP\core\JSONMessage;
 use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
 use PKP\plugins\GenericPlugin;
+use PKP\plugins\Hook;
 
 class ForthcomingPlugin extends GenericPlugin {
 	/**
@@ -51,10 +52,10 @@ class ForthcomingPlugin extends GenericPlugin {
 		if (parent::register($category, $path)) {
 			if ($this->getEnabled()) {
 
-				HookRegistry::register('LoadHandler', array($this, 'loadHandler'));
+				Hook::add('LoadHandler', array($this, 'loadHandler'));
 
 				# Add Forthcoming label to article summary, hide Forthcoming issue from public issue archive and mark in backend archive, redirect calls to issue landing page to custom Forthcoming handler
-				HookRegistry::register('TemplateManager::display', array($this, 'displayTemplate'));
+				Hook::add('TemplateManager::display', array($this, 'displayTemplate'));
 
 				# Add Forthcoming label to article summary
 				#HookRegistry::register('Templates::Issue::Issue::Article', array($this, 'articleDisplay'));
