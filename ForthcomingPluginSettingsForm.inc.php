@@ -3,8 +3,8 @@
 /**
  * @file ForthcomingPluginSettingsForm.inc.php
  *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2014-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @package plugins.generic.forthcoming
@@ -50,7 +50,7 @@ class ForthcomingPluginSettingsForm extends Form {
 
         $issuesList = [0 => __('common.none')];
         foreach ($issues as $issue) {
-        	$issuesList[$issue->getId()] = $issue->getIssueIdentification();
+            $issuesList[$issue->getId()] = $issue->getIssueIdentification();
         }
 		$templateMgr->assign('issues', $issuesList);
 		$templateMgr->assign('pluginName', $this->plugin->getName());
