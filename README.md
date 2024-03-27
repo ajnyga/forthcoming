@@ -1,7 +1,7 @@
 
-# Forthcoming articles plugin for OJS 3.3
+# Forthcoming articles plugin for OJS 3.4
 
-This is a complete rewrite of the old Forthcoming plugin which changes the whole concept of the plugin and uses the versioning features of OJS 3.3+. The new version supports statistics and using DOIs. Forthcoming articles also have their own landing pages in the same url as the final article.
+This is a complete rewrite of the old Forthcoming plugin which changes the whole concept of the plugin and uses the versioning features of OJS 3.2+. The new version supports statistics and using DOIs. Forthcoming articles also have their own landing pages in the same url as the final article.
 
 ## Usage
 
