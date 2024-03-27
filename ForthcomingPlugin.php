@@ -169,7 +169,7 @@ class ForthcomingPlugin extends GenericPlugin
     /**
      * @copydoc Plugin::getActions()
      */
-    public function getActions($request, $actionArgs)
+    public function getActions($request, $actionArgs): array
     {
         $actions = parent::getActions($request, $actionArgs);
         if (!$this->getEnabled()) {
