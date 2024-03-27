@@ -11,9 +11,14 @@
  * Find forthcoming content and display it when requested.
  */
 
-import('classes.handler.Handler');
+namespace APP\plugins\generic\forthcoming\classes;
 
-class Handler extends Handler {
+use APP\core\Services;
+use APP\i18n\AppLocale;
+use APP\submission\Submission;
+use APP\template\TemplateManager;
+
+class Handler extends \APP\handler\Handler {
 
     public static $plugin;
     public static $forthcomingIssueId;
@@ -43,7 +48,6 @@ class Handler extends Handler {
 	 */
 	function index($args, $request) {
 			AppLocale::requireComponents(LOCALE_COMPONENT_PKP_COMMON, LOCALE_COMPONENT_APP_COMMON, LOCALE_COMPONENT_PKP_USER);
-			import('classes.submission.Submission');
 			$context = $request->getContext();
 			$contextId = $context->getId();
 			$templateMgr = TemplateManager::getManager($request);
@@ -54,7 +58,7 @@ class Handler extends Handler {
 					Services::get('submission')->getMany([
 						'contextId' => $contextId,
 						'issueIds' => [self::$forthcomingIssueId],
-						'status' => [STATUS_PUBLISHED],
+						'status' => [Submission::STATUS_PUBLISHED],
 						'orderBy' => 'datePublished',
 						'orderDirection' => 'ASC',
 				]));

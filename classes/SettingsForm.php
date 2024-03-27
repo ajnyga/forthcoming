@@ -12,10 +12,19 @@
  * ForthcomingPlugin settings class
  */
 
-import('lib.pkp.classes.form.Form');
+namespace APP\plugins\generic\forthcoming\classes;
+
+use APP\core\Application;
+use APP\core\Services;
+use APP\notification\Notification;
+use APP\notification\NotificationManager;
+use APP\template\TemplateManager;
+use PKP\form\Form;
+use PKP\form\validation\FormValidatorCSRF;
+use PKP\form\validation\FormValidatorPost;
 
 class SettingsForm extends Form {
-	/** @var TutorialExamplePlugin  */
+	/** @var \APP\plugins\generic\forthcoming\ForthcomingPlugin  */
 	public $plugin;
 
 	public function __construct($plugin) {
@@ -61,11 +70,10 @@ class SettingsForm extends Form {
 		$contextId = Application::get()->getRequest()->getContext()->getId();
 		$this->plugin->updateSetting($contextId, 'forthcomingIssueId', $this->getData('forthcomingIssueId'));
 
-		import('classes.notification.NotificationManager');
 		$notificationMgr = new NotificationManager();
 		$notificationMgr->createTrivialNotification(
 			Application::get()->getRequest()->getUser()->getId(),
-			NOTIFICATION_TYPE_SUCCESS,
+			Notification::NOTIFICATION_TYPE_SUCCESS,
 			['contents' => __('common.changesSaved')]
 		);
 		return parent::execute();

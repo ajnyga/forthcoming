@@ -12,7 +12,16 @@
  * ForthcomingPlugin main class
  */
 
-import('lib.pkp.classes.plugins.GenericPlugin');
+namespace APP\plugins\generic\forthcoming;
+
+use APP\core\Application;
+use APP\plugins\generic\forthcoming\classes\Handler;
+use APP\plugins\generic\forthcoming\classes\SettingsForm;
+use APP\template\TemplateManager;
+use PKP\core\JSONMessage;
+use PKP\linkAction\LinkAction;
+use PKP\linkAction\request\AjaxModal;
+use PKP\plugins\GenericPlugin;
 
 class ForthcomingPlugin extends GenericPlugin {
 	/**
@@ -72,7 +81,7 @@ class ForthcomingPlugin extends GenericPlugin {
 				$templateMgr = $params[0];
 				$issueId = $templateMgr->getTemplateVars('issueId');
 				if ((int) $forthcomingIssueId == $issueId){
-					$request = PKPApplication::get()->getRequest();
+					$request = Application::get()->getRequest();
 					$router = $request->getRouter();
 					$request->redirectUrl($router->url($request, null, 'forthcoming'));
 				}
@@ -156,9 +165,8 @@ class ForthcomingPlugin extends GenericPlugin {
 
 			if ($forthcomingIssueId) {
 				define('HANDLER_CLASS', 'Handler');
-				$this->import('Handler');
-	            Handler::setPlugin($this);
-	            Handler::setForthcomingId($forthcomingIssueId);
+				Handler::setPlugin($this);
+				Handler::setForthcomingId($forthcomingIssueId);
 				return true;
 			}
 			$router = $request->getRouter();
@@ -190,7 +198,6 @@ class ForthcomingPlugin extends GenericPlugin {
 		}
 
 		$router = $request->getRouter();
-		import('lib.pkp.classes.linkAction.request.AjaxModal');
 		$linkAction = new LinkAction(
 			'settings',
 			new AjaxModal(
@@ -219,7 +226,6 @@ class ForthcomingPlugin extends GenericPlugin {
 	public function manage($args, $request) {
 		switch ($request->getUserVar('verb')) {
 			case 'settings':
-				$this->import('SettingsForm');
 				$form = new SettingsForm($this);
 
 				if (!$request->getUserVar('save')) {
