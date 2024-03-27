@@ -1,8 +1,8 @@
 {**
  * templates/content.tpl
  *
- * Copyright (c) 2014-2018 Simon Fraser University
- * Copyright (c) 2003-2018 John Willinsky
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2014-2024 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * Display Forthcoming articles
@@ -17,12 +17,8 @@
 	<ul class="cmp_article_list articles">
 	{foreach from=$forthcoming item=article}
 		<li>
-
-
 			{assign var=articlePath value=$article->getBestId()}
-
-
-			{if (!$section.hideAuthor && $article->getHideAuthor() == $smarty.const.AUTHOR_TOC_DEFAULT) || $article->getHideAuthor() == $smarty.const.AUTHOR_TOC_SHOW}
+			{if (!$section.hideAuthor && $article->getData('hideAuthor') == \APP\submission\Submission::AUTHOR_TOC_DEFAULT) || $article->getData('hideAuthor') == $smarty.const.AUTHOR_TOC_SHOW}
 				{assign var="showAuthor" value=true}
 			{/if}
 
@@ -43,7 +39,7 @@
 				<div class="meta">
 					{if $showAuthor}
 					<div class="authors">
-						{$article->getAuthorString()|escape}
+						{$publication->getAuthorString($authorUserGroups)|escape}
 					</div>
 					{/if}
 
@@ -66,7 +62,7 @@
 							{/if}
 							<li>
 								{assign var="hasArticleAccess" value=$hasAccess}
-								{if $currentContext->getSetting('publishingMode') == $smarty.const.PUBLISHING_MODE_OPEN || $publication->getData('accessStatus') == $smarty.const.ARTICLE_ACCESS_OPEN}
+								{if $currentContext->getSetting('publishingMode') == \APP\journal\Journal::PUBLISHING_MODE_OPEN || $publication->getData('accessStatus') == \APP\submission\Submission::ARTICLE_ACCESS_OPEN}
 									{assign var="hasArticleAccess" value=1}
 								{/if}
 								{include file="frontend/objects/galley_link.tpl" parent=$article labelledBy="article-{$article->getId()}" hasAccess=$hasArticleAccess purchaseFee=$currentJournal->getData('purchaseArticleFee') purchaseCurrency=$currentJournal->getData('currency')}
@@ -77,9 +73,6 @@
 
 				{call_hook name="Templates::Issue::Issue::Article"}
 			</div>
-
-
-
 		</li>
 	{/foreach}
 	</ul>
