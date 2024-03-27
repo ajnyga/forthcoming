@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file classes/SettingsForm.inc.php
+ * @file classes/SettingsForm.php
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2014-2024 John Willinsky

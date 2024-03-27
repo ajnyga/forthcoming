@@ -1,6 +1,6 @@
 <?php
 /**
- * @file classes/Handler.inc.php
+ * @file classes/Handler.php
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2014-2024 John Willinsky
