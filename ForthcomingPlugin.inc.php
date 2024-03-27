@@ -42,7 +42,7 @@ class ForthcomingPlugin extends GenericPlugin {
 		if (parent::register($category, $path)) {
 			if ($this->getEnabled()) {
 
-				HookRegistry::register('LoadHandler', array($this, 'loadForthcomingHandler'));
+				HookRegistry::register('LoadHandler', array($this, 'loadHandler'));
 
 				# Add Forthcoming label to article summary, hide Forthcoming issue from public issue archive and mark in backend archive, redirect calls to issue landing page to custom Forthcoming handler
 				HookRegistry::register('TemplateManager::display', array($this, 'displayTemplate'));
@@ -146,7 +146,7 @@ class ForthcomingPlugin extends GenericPlugin {
 	 * @param $args array Hook parameters
 	 * @return boolean Hook handling status
 	 */
-	function loadForthcomingHandler($hookName, $args) {
+	function loadHandler($hookName, $args) {
 		$request = $this->getRequest();
 		$templateMgr = TemplateManager::getManager($request);
 		$page =& $args[0];
@@ -155,10 +155,10 @@ class ForthcomingPlugin extends GenericPlugin {
 			$forthcomingIssueId = $this->getSetting($request->getContext()->getId(), 'forthcomingIssueId');
 
 			if ($forthcomingIssueId) {
-				define('HANDLER_CLASS', 'ForthcomingHandler');
-				$this->import('ForthcomingHandler');
-	            ForthcomingHandler::setPlugin($this);
-	            ForthcomingHandler::setForthcomingId($forthcomingIssueId);
+				define('HANDLER_CLASS', 'Handler');
+				$this->import('Handler');
+	            Handler::setPlugin($this);
+	            Handler::setForthcomingId($forthcomingIssueId);
 				return true;
 			}
 			$router = $request->getRouter();
@@ -219,8 +219,8 @@ class ForthcomingPlugin extends GenericPlugin {
 	public function manage($args, $request) {
 		switch ($request->getUserVar('verb')) {
 			case 'settings':
-				$this->import('ForthcomingPluginSettingsForm');
-				$form = new ForthcomingPluginSettingsForm($this);
+				$this->import('SettingsForm');
+				$form = new SettingsForm($this);
 
 				if (!$request->getUserVar('save')) {
 					$form->initData();

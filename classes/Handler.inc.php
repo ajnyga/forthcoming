@@ -1,19 +1,19 @@
 <?php
 /**
- * @file classes/ForthcomingHandler.inc.php
+ * @file classes/Handler.inc.php
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2014-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @package plugins.generic.forthcoming
- * @class ForthcomingHandler
+ * @class Handler
  * Find forthcoming content and display it when requested.
  */
 
 import('classes.handler.Handler');
 
-class ForthcomingHandler extends Handler {
+class Handler extends Handler {
 
     public static $plugin;
     public static $forthcomingIssueId;

@@ -1,20 +1,20 @@
 <?php
 
 /**
- * @file classes/ForthcomingPluginSettingsForm.inc.php
+ * @file classes/SettingsForm.inc.php
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2014-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @package plugins.generic.forthcoming
- * @class ForthcomingPluginSettingsForm
+ * @class SettingsForm
  * ForthcomingPlugin settings class
  */
 
 import('lib.pkp.classes.form.Form');
 
-class ForthcomingPluginSettingsForm extends Form {
+class SettingsForm extends Form {
 	/** @var TutorialExamplePlugin  */
 	public $plugin;
 
