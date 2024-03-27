@@ -9,72 +9,63 @@
  * @package plugins.generic.forthcoming
  *
  * @class Handler
- * Find forthcoming content and display it when requested.
+ *
+ * @brief Find forthcoming content and display it when requested.
  */
 
 namespace APP\plugins\generic\forthcoming\classes;
 
-use APP\core\Services;
+use APP\core\Request;
+use APP\facades\Repo;
+use APP\plugins\generic\forthcoming\ForthcomingPlugin;
 use APP\submission\Submission;
 use APP\template\TemplateManager;
+use PKP\security\Role;
 
 class Handler extends \APP\handler\Handler
 {
-    public static $plugin;
-    public static $forthcomingIssueId;
+    public static ForthcomingPlugin $plugin;
+    public static ?int $forthcomingIssueId;
 
-    public static function setPlugin($plugin)
+    public static function setPlugin(ForthcomingPlugin $plugin): void
     {
-        self::$plugin = $plugin;
+        static::$plugin = $plugin;
     }
 
-    public static function setForthcomingId($forthcomingIssueId)
+    public static function setForthcomingId(?int $forthcomingIssueId): void
     {
-        self::$forthcomingIssueId = $forthcomingIssueId;
-    }
-
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
+        static::$forthcomingIssueId = $forthcomingIssueId;
     }
 
     /**
-     * Handle index request (redirect to "view")
+     * @copydoc PKPHandler::index()
      *
-     * @param $args array Arguments array.
-     * @param $request PKPRequest Request object.
+     * @param Request $request Request
      */
-    public function index($args, $request)
+    public function index($args, $request): void
     {
-        $context = $request->getContext();
-        $contextId = $context->getId();
+        $contextId = $request->getContext()->getId();
         $templateMgr = TemplateManager::getManager($request);
         $this->setupTemplate($request);
 
-        if (self::$forthcomingIssueId) {
-            $forthcomingIterator = iterator_to_array(
-                Services::get('submission')->getMany([
-                    'contextId' => $contextId,
-                    'issueIds' => [self::$forthcomingIssueId],
-                    'status' => [Submission::STATUS_PUBLISHED],
-                    'orderBy' => 'datePublished',
-                    'orderDirection' => 'ASC',
-                ])
-            );
-
-            $forthcomingSubmissions = [];
-            foreach ($forthcomingIterator as $submission) {
-                if ($submission->getCurrentPublication()->getData('issueId') == self::$forthcomingIssueId && $submission->getCurrentPublication()->getData('datePublished')) {
-                    $forthcomingSubmissions[] = $submission;
-                }
-            }
-
-            $templateMgr->assign('forthcoming', $forthcomingSubmissions);
-            $templateMgr->display(self::$plugin->getTemplateResource('content.tpl'));
+        if (!static::$forthcomingIssueId) {
+            return;
         }
+
+        $collector = Repo::submission()->getCollector();
+
+        $submissions = $collector
+            ->filterByContextIds([$contextId])
+            ->filterByIssueIds([static::$forthcomingIssueId])
+            ->filterByStatus([Submission::STATUS_PUBLISHED])
+            ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
+            ->getMany()
+            ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingIssueId && $publication->getData('datePublished'))
+            ->toArray();
+
+        $authorUserGroups = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_AUTHOR], $contextId);
+
+        $templateMgr->assign(['forthcoming' => $submissions, 'authorUserGroups' => $authorUserGroups]);
+        $templateMgr->display(static::$plugin->getTemplateResource('content.tpl'));
     }
 }

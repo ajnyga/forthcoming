@@ -10,15 +10,18 @@
  * @package plugins.generic.forthcoming
  *
  * @class SettingsForm
- * ForthcomingPlugin settings class
+ *
+ * @brief ForthcomingPlugin settings class
  */
 
 namespace APP\plugins\generic\forthcoming\classes;
 
 use APP\core\Application;
-use APP\core\Services;
+use APP\facades\Repo;
+use APP\issue\Issue;
 use APP\notification\Notification;
 use APP\notification\NotificationManager;
+use APP\plugins\generic\forthcoming\ForthcomingPlugin;
 use APP\template\TemplateManager;
 use PKP\form\Form;
 use PKP\form\validation\FormValidatorCSRF;
@@ -26,52 +29,63 @@ use PKP\form\validation\FormValidatorPost;
 
 class SettingsForm extends Form
 {
-    /** @var \APP\plugins\generic\forthcoming\ForthcomingPlugin  */
-    public $plugin;
-
-    public function __construct($plugin)
+    /**
+     * Constructor
+     */
+    public function __construct(public ForthcomingPlugin $plugin)
     {
         parent::__construct($plugin->getTemplateResource('settings.tpl'));
-        $this->plugin = $plugin;
         $this->addCheck(new FormValidatorPost($this));
         $this->addCheck(new FormValidatorCSRF($this));
     }
 
-    public function initData()
+    /**
+     * @copydoc Form::initData()
+     */
+    public function initData(): void
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();
         $this->setData('forthcomingIssueId', $this->plugin->getSetting($contextId, 'forthcomingIssueId'));
         parent::initData();
     }
 
-    public function readInputData()
+    /**
+     * @copydoc Form::readInputData()
+     */
+    public function readInputData(): void
     {
         $this->readUserVars(['forthcomingIssueId']);
         parent::readInputData();
     }
 
-    public function fetch($request, $template = null, $display = false)
+    /**
+     * @copydoc Form::fetch()
+     *
+     * @param null|mixed $template
+     */
+    public function fetch($request, $template = null, $display = false): string
     {
         $templateMgr = TemplateManager::getManager($request);
         $contextId = Application::get()->getRequest()->getContext()->getId();
 
-        $params = [
-            'contextId' => $contextId,
-            'orderBy' => 'seq',
-            'orderDirection' => 'ASC',
-            'isPublished' => true,
-        ];
-        $issues = iterator_to_array(Services::get('issue')->getMany($params));
+        $collector = Repo::issue()->getCollector();
+        $issues = $collector
+            ->filterByContextIds([$contextId])
+            ->filterByPublished(true)
+            ->orderBy($collector::ORDERBY_SEQUENCE)
+            ->getMany()
+            ->mapWithKeys(fn (Issue $issue) => [$issue->getId() => $issue->getIssueIdentification()])
+            ->collect()
+            ->prepend(__('common.none'), 0)
+            ->toArray();
 
-        $issuesList = [0 => __('common.none')];
-        foreach ($issues as $issue) {
-            $issuesList[$issue->getId()] = $issue->getIssueIdentification();
-        }
-        $templateMgr->assign('issues', $issuesList);
-        $templateMgr->assign('pluginName', $this->plugin->getName());
+        $templateMgr->assign(['issues' => $issues, 'pluginName' => $this->plugin->getName()]);
         return parent::fetch($request, $template, $display);
     }
 
+    /**
+     * @copydoc Form::execute()
+     */
     public function execute(...$functionArgs)
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();

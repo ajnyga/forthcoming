@@ -15,7 +15,6 @@
 </script>
 
 <form class="pkp_form" id="forthcomingPluginSettingsForm" method="post" action="{url router=$smarty.const.ROUTE_COMPONENT op="manage" category="generic" plugin=$pluginName verb="settings" save=true}">
-
 	{csrf}
 
 	{fbvFormArea id="forthcomingDescriptionFormArea"}
@@ -27,5 +26,4 @@
 	{/fbvFormArea}
 
 	{fbvFormButtons}
-
 </form>
