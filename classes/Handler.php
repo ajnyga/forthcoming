@@ -25,16 +25,16 @@ use PKP\security\Role;
 class Handler extends \APP\handler\Handler
 {
     public static ForthcomingPlugin $plugin;
-    public static ?int $forthcomingIssueId;
+    public static ?int $forthcomingSeriesId;
 
     public static function setPlugin(ForthcomingPlugin $plugin): void
     {
         static::$plugin = $plugin;
     }
 
-    public static function setForthcomingId(?int $forthcomingIssueId): void
+    public static function setForthcomingId(?int $forthcomingSeriesId): void
     {
-        static::$forthcomingIssueId = $forthcomingIssueId;
+        static::$forthcomingSeriesId = $forthcomingSeriesId;
     }
 
     /**
@@ -48,7 +48,7 @@ class Handler extends \APP\handler\Handler
         $templateMgr = TemplateManager::getManager($request);
         $this->setupTemplate($request);
 
-        if (!static::$forthcomingIssueId) {
+        if (!static::$forthcomingSeriesId) {
             return;
         }
 
@@ -56,11 +56,11 @@ class Handler extends \APP\handler\Handler
 
         $submissions = $collector
             ->filterByContextIds([$contextId])
-            ->filterByIssueIds([static::$forthcomingIssueId])
+            ->filterByIssueIds([static::$forthcomingSeriesId])
             ->filterByStatus([Submission::STATUS_PUBLISHED])
             ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
             ->getMany()
-            ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingIssueId && $publication->getData('datePublished'))
+            ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingSeriesId && $publication->getData('datePublished'))
             ->toArray();
 
         $authorUserGroups = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_AUTHOR], $contextId);

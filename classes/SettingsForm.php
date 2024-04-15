@@ -45,7 +45,7 @@ class SettingsForm extends Form
     public function initData(): void
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();
-        $this->setData('forthcomingIssueId', $this->plugin->getSetting($contextId, 'forthcomingIssueId'));
+        $this->setData('forthcomingSeriesId', $this->plugin->getSetting($contextId, 'forthcomingSeriesId'));
         parent::initData();
     }
 
@@ -54,7 +54,7 @@ class SettingsForm extends Form
      */
     public function readInputData(): void
     {
-        $this->readUserVars(['forthcomingIssueId']);
+        $this->readUserVars(['forthcomingSeriesId']);
         parent::readInputData();
     }
 
@@ -89,7 +89,7 @@ class SettingsForm extends Form
     public function execute(...$functionArgs)
     {
         $contextId = Application::get()->getRequest()->getContext()->getId();
-        $this->plugin->updateSetting($contextId, 'forthcomingIssueId', $this->getData('forthcomingIssueId'));
+        $this->plugin->updateSetting($contextId, 'forthcomingSeriesId', $this->getData('forthcomingSeriesId'));
 
         $notificationMgr = new NotificationManager();
         $notificationMgr->createTrivialNotification(

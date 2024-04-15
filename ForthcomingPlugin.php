@@ -72,8 +72,8 @@ class ForthcomingPlugin extends GenericPlugin
         [$templateManager, $template] = $params;
         $request = Application::get()->getRequest();
         $contextId = $request->getContext()?->getId();
-        $forthcomingIssueId = (int) $this->getSetting($contextId, 'forthcomingIssueId');
-        if (!$forthcomingIssueId) {
+        $forthcomingSeriesId = (int) $this->getSetting($contextId, 'forthcomingSeriesId');
+        if (!$forthcomingSeriesId) {
             return Hook::CONTINUE;
         }
 
@@ -81,26 +81,26 @@ class ForthcomingPlugin extends GenericPlugin
             // Redirect default issue toc page to Forthcoming page
             case 'frontend/pages/issue.tpl':
                 $issueId = $templateManager->getTemplateVars('issueId');
-                if ($forthcomingIssueId === (int) $issueId) {
+                if ($forthcomingSeriesId === (int) $issueId) {
                     $router = $request->getRouter();
                     $request->redirectUrl($router->url($request, null, 'forthcoming'));
                 }
                 break;
 
-            // Article landing page
+                // Article landing page
             case 'frontend/pages/article.tpl':
                 $publication = $templateManager->getTemplateVars('publication');
-                if ((int) $publication?->getData('issueId') === $forthcomingIssueId) {
+                if ((int) $publication?->getData('issueId') === $forthcomingSeriesId) {
                     $templateManager->registerFilter('output', [$this, 'articleLandingPageFilter']);
                 }
                 break;
 
-            // Remove Forthcoming issue from the list of issues
+                // Remove Forthcoming issue from the list of issues
             case 'frontend/pages/issueArchive.tpl':
                 $issues = $templateManager->getTemplateVars('issues');
                 $total = $templateManager->getTemplateVars('total');
                 foreach ($issues as $key => $issue) {
-                    if ($issue->getId() === (int) $forthcomingIssueId) {
+                    if ($issue->getId() === (int) $forthcomingSeriesId) {
                         unset($issues[$key]);
                         --$total;
                         break;
@@ -109,9 +109,9 @@ class ForthcomingPlugin extends GenericPlugin
                 $templateManager->assign(['issues' => $issues, 'total' => $total]);
                 break;
 
-            // Backend archive display
+                // Backend archive display
             case 'manageIssues/issues.tpl':
-                $forthcomingIssueBackendStyles = "span#cell-{$forthcomingIssueId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
+                $forthcomingIssueBackendStyles = "span#cell-{$forthcomingSeriesId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
                 $templateManager->addStylesheet(
                     'forthcomingIssueBackendStyles',
                     $forthcomingIssueBackendStyles,
@@ -134,12 +134,12 @@ class ForthcomingPlugin extends GenericPlugin
         }
 
         $request = $this->getRequest();
-        $forthcomingIssueId = (int) $this->getSetting($request->getContext()->getId(), 'forthcomingIssueId');
+        $forthcomingSeriesId = (int) $this->getSetting($request->getContext()->getId(), 'forthcomingSeriesId');
 
-        if ($forthcomingIssueId) {
+        if ($forthcomingSeriesId) {
             define('HANDLER_CLASS', Handler::class);
             Handler::setPlugin($this);
-            Handler::setForthcomingId($forthcomingIssueId);
+            Handler::setForthcomingId($forthcomingSeriesId);
             return Hook::ABORT;
         }
 
