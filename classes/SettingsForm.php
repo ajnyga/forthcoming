@@ -79,7 +79,7 @@ class SettingsForm extends Form
             ->prepend(__('common.none'), 0)
             ->toArray();
 
-        $templateMgr->assign(['issues' => $series, 'pluginName' => $this->plugin->getName()]);
+        $templateMgr->assign(['series' => $series, 'pluginName' => $this->plugin->getName()]);
         return parent::fetch($request, $template, $display);
     }
 
