@@ -18,7 +18,6 @@ namespace APP\plugins\generic\forthcoming\classes;
 
 use APP\core\Application;
 use APP\facades\Repo;
-use APP\issue\Issue;
 use APP\notification\Notification;
 use APP\notification\NotificationManager;
 use APP\plugins\generic\forthcoming\ForthcomingPlugin;
@@ -26,6 +25,7 @@ use APP\template\TemplateManager;
 use PKP\form\Form;
 use PKP\form\validation\FormValidatorCSRF;
 use PKP\form\validation\FormValidatorPost;
+use APP\section\Section;
 
 class SettingsForm extends Form
 {
@@ -68,18 +68,18 @@ class SettingsForm extends Form
         $templateMgr = TemplateManager::getManager($request);
         $contextId = Application::get()->getRequest()->getContext()->getId();
 
-        $collector = Repo::issue()->getCollector();
-        $issues = $collector
-            ->filterByContextIds([$contextId])
-            ->filterByPublished(true)
-            ->orderBy($collector::ORDERBY_SEQUENCE)
+        $press = $request->getPress();
+
+        $collector = Repo::section()->getCollector();
+        $series = $collector
+            ->filterByContextIds([$press->getId()])
             ->getMany()
-            ->mapWithKeys(fn (Issue $issue) => [$issue->getId() => $issue->getIssueIdentification()])
+            ->mapWithKeys(fn (Section $section) => [$section->getId() => $section->getLocalizedTitle()])
             ->collect()
             ->prepend(__('common.none'), 0)
             ->toArray();
 
-        $templateMgr->assign(['issues' => $issues, 'pluginName' => $this->plugin->getName()]);
+        $templateMgr->assign(['issues' => $series, 'pluginName' => $this->plugin->getName()]);
         return parent::fetch($request, $template, $display);
     }
 
