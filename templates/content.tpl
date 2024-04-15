@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2024 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * Display Forthcoming articles
+ * Display Forthcoming monographs
  *}
 
 {capture assign="pageTitle"}{translate key="plugins.generic.forthcoming.pageTitle"}{/capture}
@@ -15,27 +15,27 @@
 <h2>{$pageTitle|escape}</h2>
 <div class="page page_issue">
 	<ul class="cmp_article_list articles">
-	{foreach from=$forthcoming item=article}
+	{foreach from=$forthcoming item=monograph}
 		<li>
-			{assign var=articlePath value=$article->getBestId()}
-			{if (!$section.hideAuthor && $article->getData('hideAuthor') == \APP\submission\Submission::AUTHOR_TOC_DEFAULT) || $article->getData('hideAuthor') == $smarty.const.AUTHOR_TOC_SHOW}
+			{assign var=articlePath value=$monograph->getId()}
+			{if !$section.hideAuthor && $monograph->getData('hideAuthor') == $smarty.const.AUTHOR_TOC_DEFAULT || $monograph->getData('hideAuthor') == $smarty.const.AUTHOR_TOC_SHOW}
 				{assign var="showAuthor" value=true}
 			{/if}
 
-			{assign var=publication value=$article->getCurrentPublication()}
+			{assign var=publication value=$monograph->getCurrentPublication()}
 			<div class="obj_article_summary">
 				<h2 class="title">
-					<a id="article-{$article->getId()}" {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if}>
-						{$article->getLocalizedTitle()|strip_unsafe_html}
-						{if $article->getLocalizedSubtitle()}
+					<a id="monograph-{$monograph->getId()}" {if $journal}href="{url journal=$journal->getPath() page="monograph" op="view" path=$monographPath}"{else}href="{url page="monograph" op="view" path=$monographPath}"{/if}>
+						{$monograph->getLocalizedTitle()|strip_unsafe_html}
+						{if $monograph->getLocalizedSubtitle()}
 							<span class="subtitle">
-								{$article->getLocalizedSubtitle()|escape}
+								{$monograph->getLocalizedSubtitle()|escape}
 							</span>
 						{/if}
 					</a>
 				</h2>
 
-				{if $showAuthor || ($article->getDatePublished() && $showDatePublished)}
+				{if $showAuthor || ($monograph->getDatePublished() && $showDatePublished)}
 				<div class="meta">
 					{if $showAuthor}
 					<div class="authors">
@@ -43,9 +43,9 @@
 					</div>
 					{/if}
 
-					{if $showDatePublished && $article->getDatePublished()}
+					{if $showDatePublished && $monograph->getDatePublished()}
 						<div class="published">
-							{$article->getDatePublished()|date_format:$dateFormatShort}
+							{$monograph->getDatePublished()|date_format:$dateFormatShort}
 						</div>
 					{/if}
 				</div>
@@ -53,7 +53,7 @@
 
 				{if !$hideGalleys}
 					<ul class="galleys_links">
-						{foreach from=$article->getGalleys() item=galley}
+						{foreach from=$monograph->getData('publicationFormats') item=galley}
 							{if $primaryGenreIds}
 								{assign var="file" value=$galley->getFile()}
 								{if !$galley->getRemoteUrl() && !($file && in_array($file->getGenreId(), $primaryGenreIds))}
@@ -65,7 +65,7 @@
 								{if $currentContext->getSetting('publishingMode') == \APP\journal\Journal::PUBLISHING_MODE_OPEN || $publication->getData('accessStatus') == \APP\submission\Submission::ARTICLE_ACCESS_OPEN}
 									{assign var="hasArticleAccess" value=1}
 								{/if}
-								{include file="frontend/objects/galley_link.tpl" parent=$article labelledBy="article-{$article->getId()}" hasAccess=$hasArticleAccess purchaseFee=$currentJournal->getData('purchaseArticleFee') purchaseCurrency=$currentJournal->getData('currency')}
+								{include file="frontend/objects/galley_link.tpl" parent=$monograph labelledBy="monograph-{$monograph->getId()}" hasAccess=$hasArticleAccess purchaseFee=$currentJournal->getData('purchaseArticleFee') purchaseCurrency=$currentJournal->getData('currency')}
 							</li>
 						{/foreach}
 					</ul>

@@ -56,11 +56,11 @@ class Handler extends \APP\handler\Handler
 
         $submissions = $collector
             ->filterByContextIds([$contextId])
-            ->filterByIssueIds([static::$forthcomingSeriesId])
+            ->filterBySeriesIds([static::$forthcomingSeriesId])
             ->filterByStatus([Submission::STATUS_PUBLISHED])
             ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
             ->getMany()
-            ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingSeriesId && $publication->getData('datePublished'))
+            ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('seriesId') === static::$forthcomingSeriesId && $publication->getData('datePublished'))
             ->toArray();
 
         $authorUserGroups = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_AUTHOR], $contextId);
