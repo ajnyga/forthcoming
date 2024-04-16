@@ -78,24 +78,7 @@ class ForthcomingPlugin extends GenericPlugin
         }
 
         switch ($template) {
-            // Redirect default issue toc page to Forthcoming page
-            case 'frontend/pages/issue.tpl':
-                $issueId = $templateManager->getTemplateVars('issueId');
-                if ($forthcomingSeriesId === (int) $issueId) {
-                    $router = $request->getRouter();
-                    $request->redirectUrl($router->url($request, null, 'forthcoming'));
-                }
-                break;
-
-                // Article landing page
-            case 'frontend/pages/article.tpl':
-                $publication = $templateManager->getTemplateVars('publication');
-                if ((int) $publication?->getData('issueId') === $forthcomingSeriesId) {
-                    $templateManager->registerFilter('output', [$this, 'articleLandingPageFilter']);
-                }
-                break;
-
-                // Remove Forthcoming book from the catalog
+            // Remove Forthcoming book from the catalog
             case 'frontend/pages/catalog.tpl':
                 $submissions = $templateManager->getTemplateVars('publishedSubmissions');
                 foreach ($submissions as $key => $submission) {
@@ -104,16 +87,6 @@ class ForthcomingPlugin extends GenericPlugin
                     }
                 }
                 $templateManager->assign(['publishedSubmissions' => $submissions]);
-                break;
-
-                // Backend archive display
-            case 'manageIssues/issues.tpl':
-                $forthcomingIssueBackendStyles = "span#cell-{$forthcomingSeriesId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
-                $templateManager->addStylesheet(
-                    'forthcomingIssueBackendStyles',
-                    $forthcomingIssueBackendStyles,
-                    ['inline' => true, 'contexts' => 'backend']
-                );
                 break;
         }
 
