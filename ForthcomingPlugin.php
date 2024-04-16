@@ -95,18 +95,15 @@ class ForthcomingPlugin extends GenericPlugin
                 }
                 break;
 
-                // Remove Forthcoming issue from the list of issues
-            case 'frontend/pages/issueArchive.tpl':
-                $issues = $templateManager->getTemplateVars('issues');
-                $total = $templateManager->getTemplateVars('total');
-                foreach ($issues as $key => $issue) {
-                    if ($issue->getId() === (int) $forthcomingSeriesId) {
-                        unset($issues[$key]);
-                        --$total;
-                        break;
+                // Remove Forthcoming book from the catalog
+            case 'frontend/pages/catalog.tpl':
+                $submissions = $templateManager->getTemplateVars('publishedSubmissions');
+                foreach ($submissions as $key => $submission) {
+                    if ($submission->getSeriesId() === (int) $forthcomingSeriesId) {
+                        unset($submissions[$key]);
                     }
                 }
-                $templateManager->assign(['issues' => $issues, 'total' => $total]);
+                $templateManager->assign(['publishedSubmissions' => $submissions]);
                 break;
 
                 // Backend archive display
