@@ -78,7 +78,15 @@ class ForthcomingPlugin extends GenericPlugin
         }
 
         switch ($template) {
-            // Remove Forthcoming book from the catalog
+            // Article landing page
+            case 'frontend/pages/book.tpl':
+                $series = $templateManager->getTemplateVars('series');
+                if ((int) $series->getId() === $forthcomingSeriesId) {
+                    $templateManager->registerFilter('output', [$this, 'articleLandingPageFilter']);
+                }
+                break;
+
+                // Remove Forthcoming monograph from the catalog
             case 'frontend/pages/catalog.tpl':
                 $submissions = $templateManager->getTemplateVars('publishedSubmissions');
                 foreach ($submissions as $key => $submission) {
@@ -119,11 +127,11 @@ class ForthcomingPlugin extends GenericPlugin
     }
 
     /**
-     * Removed the authorFormFilter and adds a "Forthcoming" label to the article's landing page
+     * Removed the authorFormFilter and adds a "Forthcoming" label to the book's landing page
      */
     public function articleLandingPageFilter($output, $templateMgr): string
     {
-        if (!preg_match('/<h1[^>]+class="page_title"[^>]*>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
+        if (!preg_match('/<h1[^>]+class="title"[^>]*>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
             return $output;
         }
 
