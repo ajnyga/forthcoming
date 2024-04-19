@@ -21,6 +21,7 @@ use APP\plugins\generic\forthcoming\ForthcomingPlugin;
 use APP\submission\Submission;
 use APP\template\TemplateManager;
 use PKP\security\Role;
+use APP\core\Application;
 
 class Handler extends \APP\handler\Handler
 {
@@ -47,25 +48,42 @@ class Handler extends \APP\handler\Handler
         $contextId = $request->getContext()->getId();
         $templateMgr = TemplateManager::getManager($request);
         $this->setupTemplate($request);
+        $application = Application::getName();
+        $template = null;
 
         if (!static::$forthcomingId) {
             return;
         }
 
         $collector = Repo::submission()->getCollector();
-
-        $submissions = $collector
-            ->filterByContextIds([$contextId])
-            ->filterBySeriesIds([static::$forthcomingId])
-            ->filterByStatus([Submission::STATUS_PUBLISHED])
-            ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
-            ->getMany()
-            ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('seriesId') === static::$forthcomingId && $publication->getData('datePublished'))
-            ->toArray();
+        switch ($application) {
+            case 'ojs2':
+                $submissions = $collector
+                    ->filterByContextIds([$contextId])
+                    ->filterByIssueIds([static::$forthcomingIssueId])
+                    ->filterByStatus([Submission::STATUS_PUBLISHED])
+                    ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
+                    ->getMany()
+                    ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingIssueId && $publication->getData('datePublished'))
+                    ->toArray();
+                $template = "content.tpl";
+                break;
+            case 'omp':
+                $submissions = $collector
+                    ->filterByContextIds([$contextId])
+                    ->filterBySeriesIds([static::$forthcomingId])
+                    ->filterByStatus([Submission::STATUS_PUBLISHED])
+                    ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
+                    ->getMany()
+                    ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('seriesId') === static::$forthcomingId && $publication->getData('datePublished'))
+                    ->toArray();
+                $template = "bookContent.tpl";
+                break;
+        }
 
         $authorUserGroups = Repo::userGroup()->getByRoleIds([Role::ROLE_ID_AUTHOR], $contextId);
 
         $templateMgr->assign(['forthcoming' => $submissions, 'authorUserGroups' => $authorUserGroups]);
-        $templateMgr->display(static::$plugin->getTemplateResource('content.tpl'));
+        $templateMgr->display(static::$plugin->getTemplateResource($template));
     }
 }
