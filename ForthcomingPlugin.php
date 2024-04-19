@@ -72,17 +72,58 @@ class ForthcomingPlugin extends GenericPlugin
         [$templateManager, $template] = $params;
         $request = Application::get()->getRequest();
         $contextId = $request->getContext()?->getId();
-        $forthcomingSeriesId = (int) $this->getSetting($contextId, 'forthcomingSeriesId');
-        if (!$forthcomingSeriesId) {
+        $forthcomingId = (int) $this->getSetting($contextId, 'forthcomingId');
+        if (!$forthcomingId) {
             return Hook::CONTINUE;
         }
 
         switch ($template) {
-            // Article landing page
+            // Redirect default issue toc page to Forthcoming page
+            case 'frontend/pages/issue.tpl':
+                $issueId = $templateManager->getTemplateVars('issueId');
+                if ($forthcomingIssueId === (int) $issueId) {
+                    $router = $request->getRouter();
+                    $request->redirectUrl($router->url($request, null, 'forthcoming'));
+                }
+                break;
+
+                // Article landing page
+            case 'frontend/pages/article.tpl':
+                $publication = $templateManager->getTemplateVars('publication');
+                if ((int) $publication?->getData('issueId') === $forthcomingIssueId) {
+                    $templateManager->registerFilter('output', [$this, 'articleLandingPageFilter']);
+                }
+                break;
+
+                // Remove Forthcoming issue from the list of issues
+            case 'frontend/pages/issueArchive.tpl':
+                $issues = $templateManager->getTemplateVars('issues');
+                $total = $templateManager->getTemplateVars('total');
+                foreach ($issues as $key => $issue) {
+                    if ($issue->getId() === (int) $forthcomingIssueId) {
+                        unset($issues[$key]);
+                        --$total;
+                        break;
+                    }
+                }
+                $templateManager->assign(['issues' => $issues, 'total' => $total]);
+                break;
+
+                // Backend archive display
+            case 'manageIssues/issues.tpl':
+                $forthcomingIssueBackendStyles = "span#cell-{$forthcomingIssueId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
+                $templateManager->addStylesheet(
+                    'forthcomingIssueBackendStyles',
+                    $forthcomingIssueBackendStyles,
+                    ['inline' => true, 'contexts' => 'backend']
+                );
+                break;
+
+                // Book landing page
             case 'frontend/pages/book.tpl':
                 $series = $templateManager->getTemplateVars('series');
-                if ((int) $series->getId() === $forthcomingSeriesId) {
-                    $templateManager->registerFilter('output', [$this, 'articleLandingPageFilter']);
+                if ((int) $series->getId() === $forthcomingId) {
+                    $templateManager->registerFilter('output', [$this, 'bookLandingPageFilter']);
                 }
                 break;
 
@@ -90,7 +131,7 @@ class ForthcomingPlugin extends GenericPlugin
             case 'frontend/pages/catalog.tpl':
                 $submissions = $templateManager->getTemplateVars('publishedSubmissions');
                 foreach ($submissions as $key => $submission) {
-                    if ($submission->getSeriesId() === (int) $forthcomingSeriesId) {
+                    if ($submission->getSeriesId() === (int) $forthcomingId) {
                         unset($submissions[$key]);
                     }
                 }
@@ -112,12 +153,12 @@ class ForthcomingPlugin extends GenericPlugin
         }
 
         $request = $this->getRequest();
-        $forthcomingSeriesId = (int) $this->getSetting($request->getContext()->getId(), 'forthcomingSeriesId');
+        $forthcomingId = (int) $this->getSetting($request->getContext()->getId(), 'forthcomingId');
 
-        if ($forthcomingSeriesId) {
+        if ($forthcomingId) {
             define('HANDLER_CLASS', Handler::class);
             Handler::setPlugin($this);
-            Handler::setForthcomingId($forthcomingSeriesId);
+            Handler::setForthcomingId($forthcomingId);
             return Hook::ABORT;
         }
 
@@ -127,9 +168,27 @@ class ForthcomingPlugin extends GenericPlugin
     }
 
     /**
-     * Removed the authorFormFilter and adds a "Forthcoming" label to the book's landing page
+     * Removed the authorFormFilter and adds a "Forthcoming" label to the article's landing page
      */
     public function articleLandingPageFilter($output, $templateMgr): string
+    {
+        if (!preg_match('/<h1[^>]+class="page_title"[^>]*>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
+            return $output;
+        }
+
+        $offset = $matches[0][1];
+        $newOutput = substr($output, 0, $offset);
+        $newOutput .= '<div class="forthcomingLabel"><span style="border-radius: 5px; background: #ebebeb; color: #262626; padding: 6px;">' . __('plugins.generic.forthcoming.label') . '</span></div><br />';
+        $newOutput .= substr($output, $offset);
+        $output = $newOutput;
+        $templateMgr->unregisterFilter('output', [$this, 'authorFormFilter']);
+        return $output;
+    }
+
+    /**
+     * Removed the authorFormFilter and adds a "Forthcoming" label to the book's landing page
+     */
+    public function bookLandingPageFilter($output, $templateMgr): string
     {
         if (!preg_match('/<h1[^>]+class="title"[^>]*>/', $output, $matches, PREG_OFFSET_CAPTURE)) {
             return $output;

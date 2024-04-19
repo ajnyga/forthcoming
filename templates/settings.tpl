@@ -21,8 +21,8 @@
 		<div id="description">{translate key="plugins.generic.forthcoming.settings.description"}</div>
 	{/fbvFormArea}
 
-	{fbvFormArea id="forthcomingSeriesIdFormArea"}
-		{fbvElement type="select" id="forthcomingSeriesId" translate=false from=$series selected=$forthcomingSeriesId}
+	{fbvFormArea id="forthcomingIdFormArea"}
+		{fbvElement type="select" id="forthcomingId" translate=false from=$series selected=$forthcomingId}
 	{/fbvFormArea}
 
 	{fbvFormButtons}
