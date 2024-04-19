@@ -73,12 +73,12 @@ class SettingsForm extends Form
         switch ($application) {
             case 'ojs2':
                 $issues = $this->retrieveIssues($contextId);
-                $templateMgr->assign(['issues' => $issues, 'pluginName' => $this->plugin->getName()]);
+                $templateMgr->assign(['forthcoming' => $issues, 'pluginName' => $this->plugin->getName()]);
                 break;
             case 'omp':
                 $press = $request->getPress();
                 $series = $this->retrieveSeries($press->getId());
-                $templateMgr->assign(['series' => $series, 'pluginName' => $this->plugin->getName()]);
+                $templateMgr->assign(['forthcoming' => $series, 'pluginName' => $this->plugin->getName()]);
                 break;
         }
         return parent::fetch($request, $template, $display);

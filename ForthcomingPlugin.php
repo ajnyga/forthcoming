@@ -81,7 +81,7 @@ class ForthcomingPlugin extends GenericPlugin
             // Redirect default issue toc page to Forthcoming page
             case 'frontend/pages/issue.tpl':
                 $issueId = $templateManager->getTemplateVars('issueId');
-                if ($forthcomingIssueId === (int) $issueId) {
+                if ($forthcomingId === (int) $issueId) {
                     $router = $request->getRouter();
                     $request->redirectUrl($router->url($request, null, 'forthcoming'));
                 }
@@ -90,7 +90,7 @@ class ForthcomingPlugin extends GenericPlugin
                 // Article landing page
             case 'frontend/pages/article.tpl':
                 $publication = $templateManager->getTemplateVars('publication');
-                if ((int) $publication?->getData('issueId') === $forthcomingIssueId) {
+                if ((int) $publication?->getData('issueId') === $forthcomingId) {
                     $templateManager->registerFilter('output', [$this, 'articleLandingPageFilter']);
                 }
                 break;
@@ -100,7 +100,7 @@ class ForthcomingPlugin extends GenericPlugin
                 $issues = $templateManager->getTemplateVars('issues');
                 $total = $templateManager->getTemplateVars('total');
                 foreach ($issues as $key => $issue) {
-                    if ($issue->getId() === (int) $forthcomingIssueId) {
+                    if ($issue->getId() === (int) $forthcomingId) {
                         unset($issues[$key]);
                         --$total;
                         break;
@@ -111,7 +111,7 @@ class ForthcomingPlugin extends GenericPlugin
 
                 // Backend archive display
             case 'manageIssues/issues.tpl':
-                $forthcomingIssueBackendStyles = "span#cell-{$forthcomingIssueId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
+                $forthcomingIssueBackendStyles = "span#cell-{$forthcomingId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
                 $templateManager->addStylesheet(
                     'forthcomingIssueBackendStyles',
                     $forthcomingIssueBackendStyles,

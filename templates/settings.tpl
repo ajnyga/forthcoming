@@ -22,7 +22,7 @@
 	{/fbvFormArea}
 
 	{fbvFormArea id="forthcomingIdFormArea"}
-		{fbvElement type="select" id="forthcomingId" translate=false from=$series selected=$forthcomingId}
+		{fbvElement type="select" id="forthcomingId" translate=false from=$forthcoming selected=$forthcomingId}
 	{/fbvFormArea}
 
 	{fbvFormButtons}

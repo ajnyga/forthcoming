@@ -60,11 +60,11 @@ class Handler extends \APP\handler\Handler
             case 'ojs2':
                 $submissions = $collector
                     ->filterByContextIds([$contextId])
-                    ->filterByIssueIds([static::$forthcomingIssueId])
+                    ->filterByIssueIds([static::$forthcomingId])
                     ->filterByStatus([Submission::STATUS_PUBLISHED])
                     ->orderBy($collector::ORDERBY_DATE_PUBLISHED, $collector::ORDER_DIR_ASC)
                     ->getMany()
-                    ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingIssueId && $publication->getData('datePublished'))
+                    ->filter(fn (Submission $submission) => (int) ($publication = $submission->getCurrentPublication())?->getData('issueId') === static::$forthcomingId && $publication->getData('datePublished'))
                     ->toArray();
                 $template = "content.tpl";
                 break;
