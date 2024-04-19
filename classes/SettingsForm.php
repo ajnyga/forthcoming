@@ -18,6 +18,7 @@ namespace APP\plugins\generic\forthcoming\classes;
 
 use APP\core\Application;
 use APP\facades\Repo;
+use APP\issue\Issue;
 use APP\notification\Notification;
 use APP\notification\NotificationManager;
 use APP\plugins\generic\forthcoming\ForthcomingPlugin;
@@ -67,20 +68,50 @@ class SettingsForm extends Form
     {
         $templateMgr = TemplateManager::getManager($request);
         $contextId = Application::get()->getRequest()->getContext()->getId();
+        $application = Application::getName();
 
-        $press = $request->getPress();
+        switch ($application) {
+            case 'ojs2':
+                $issues = $this->retrieveIssues($contextId);
+                $templateMgr->assign(['issues' => $issues, 'pluginName' => $this->plugin->getName()]);
+                break;
+            case 'omp':
+                $press = $request->getPress();
+                $series = $this->retrieveSeries($press->getId());
+                $templateMgr->assign(['series' => $series, 'pluginName' => $this->plugin->getName()]);
+                break;
+        }
+        return parent::fetch($request, $template, $display);
+    }
 
+    private function retrieveIssues($contextId)
+    {
+        $collector = Repo::issue()->getCollector();
+        $issues = $collector
+            ->filterByContextIds([$contextId])
+            ->filterByPublished(true)
+            ->orderBy($collector::ORDERBY_SEQUENCE)
+            ->getMany()
+            ->mapWithKeys(fn (Issue $issue) => [$issue->getId() => $issue->getIssueIdentification()])
+            ->collect()
+            ->prepend(__('common.none'), 0)
+            ->toArray();
+
+        return $issues;
+    }
+
+    private function retrieveSeries($pressId)
+    {
         $collector = Repo::section()->getCollector();
         $series = $collector
-            ->filterByContextIds([$press->getId()])
+            ->filterByContextIds([$pressId])
             ->getMany()
             ->mapWithKeys(fn (Section $section) => [$section->getId() => $section->getLocalizedTitle()])
             ->collect()
             ->prepend(__('common.none'), 0)
             ->toArray();
 
-        $templateMgr->assign(['series' => $series, 'pluginName' => $this->plugin->getName()]);
-        return parent::fetch($request, $template, $display);
+        return $series;
     }
 
     /**
