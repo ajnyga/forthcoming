@@ -87,7 +87,7 @@ class ForthcomingPlugin extends GenericPlugin
                 }
                 break;
 
-                // Article landing page
+            // Article landing page
             case 'frontend/pages/article.tpl':
                 $publication = $templateManager->getTemplateVars('publication');
                 if ((int) $publication?->getData('issueId') === $forthcomingId) {
@@ -95,7 +95,7 @@ class ForthcomingPlugin extends GenericPlugin
                 }
                 break;
 
-                // Remove Forthcoming issue from the list of issues
+            // Remove Forthcoming issue from the list of issues
             case 'frontend/pages/issueArchive.tpl':
                 $issues = $templateManager->getTemplateVars('issues');
                 $total = $templateManager->getTemplateVars('total');
@@ -109,7 +109,7 @@ class ForthcomingPlugin extends GenericPlugin
                 $templateManager->assign(['issues' => $issues, 'total' => $total]);
                 break;
 
-                // Backend archive display
+            // Backend archive display
             case 'manageIssues/issues.tpl':
                 $forthcomingIssueBackendStyles = "span#cell-{$forthcomingId}-identification:after { font-family: FontAwesome; content: \"\f005\"; }";
                 $templateManager->addStylesheet(
@@ -119,7 +119,7 @@ class ForthcomingPlugin extends GenericPlugin
                 );
                 break;
 
-                // Book landing page
+            // Book landing page
             case 'frontend/pages/book.tpl':
                 $series = $templateManager->getTemplateVars('series');
                 if ((int) $series->getId() === $forthcomingId) {
@@ -127,7 +127,7 @@ class ForthcomingPlugin extends GenericPlugin
                 }
                 break;
 
-                // Remove Forthcoming monograph from the catalog
+            // Remove Forthcoming monograph from the catalog
             case 'frontend/pages/catalog.tpl':
                 $submissions = $templateManager->getTemplateVars('publishedSubmissions');
                 foreach ($submissions as $key => $submission) {
