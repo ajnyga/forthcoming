@@ -72,7 +72,7 @@ class ForthcomingPlugin extends GenericPlugin
         [$templateManager, $template] = $params;
         $request = Application::get()->getRequest();
         $contextId = $request->getContext()?->getId();
-        $forthcomingId = (int) $this->getSetting($contextId, 'forthcomingId');
+        $forthcomingId = (int) $this->getSetting($contextId, self::getSettingName());
         if (!$forthcomingId) {
             return Hook::CONTINUE;
         }
@@ -153,7 +153,7 @@ class ForthcomingPlugin extends GenericPlugin
         }
 
         $request = $this->getRequest();
-        $forthcomingId = (int) $this->getSetting($request->getContext()->getId(), 'forthcomingId');
+        $forthcomingId = (int) $this->getSetting($request->getContext()->getId(), self::getSettingName());
 
         if ($forthcomingId) {
             define('HANDLER_CLASS', Handler::class);
@@ -241,5 +241,10 @@ class ForthcomingPlugin extends GenericPlugin
 
         $form->execute();
         return new JSONMessage(true);
+    }
+
+    public static function getSettingName() {
+        $applicationName = Application::getName();
+        return $applicationName === 'ojs2' ? 'forthcomingIssueId' : 'forthcomingSeriesId';
     }
 }
