@@ -121,9 +121,10 @@ class ForthcomingPlugin extends GenericPlugin
 
             // Book landing page
             case 'frontend/pages/book.tpl':
-                $series = $templateManager->getTemplateVars('series');
-                if ((int) $series->getId() === $forthcomingId) {
-                    $templateManager->registerFilter('output', [$this, 'bookLandingPageFilter']);
+                if ($series) {
+                    if ((int) $series->getId() === $forthcomingId) {
+                        $templateManager->registerFilter('output', [$this, 'bookLandingPageFilter']);
+                    }
                 }
                 break;
 
@@ -243,7 +244,8 @@ class ForthcomingPlugin extends GenericPlugin
         return new JSONMessage(true);
     }
 
-    public static function getSettingName() {
+    public static function getSettingName()
+    {
         $applicationName = Application::getName();
         return $applicationName === 'ojs2' ? 'forthcomingIssueId' : 'forthcomingSeriesId';
     }
