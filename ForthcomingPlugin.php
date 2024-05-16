@@ -121,6 +121,7 @@ class ForthcomingPlugin extends GenericPlugin
 
             // Book landing page
             case 'frontend/pages/book.tpl':
+                $series = $templateManager->getTemplateVars('series');
                 if ($series) {
                     if ((int) $series->getId() === $forthcomingId) {
                         $templateManager->registerFilter('output', [$this, 'bookLandingPageFilter']);
